@@ -18,14 +18,16 @@ const ShopContextProvider = (props) => {
 
     useEffect(() => {
         // 1. ਬੈਕਐਂਡ ਤੋਂ ਸਾਰੇ ਪ੍ਰੋਡਕਟਸ ਲੈ ਕੇ ਆਉਣਾ
-        fetch('http://localhost:4000/allproducts')
+        // ithe link change kita hoya aa http://localhost:4000/allproducts
+        fetch('https://ecommerce-website-31e9.onrender.com')
             .then((response) => response.json())
             .then((data) => setAll_Product(data))
             .catch((error) => console.log("Error fetching products:", error));
 
         // 2. ਜੇ ਯੂਜ਼ਰ ਲੌਗਇਨ ਹੈ, ਤਾਂ ਉਹਦਾ ਸੇਵ ਕੀਤਾ ਹੋਇਆ ਕਾਰਟ ਡਾਟਾ ਲੈ ਕੇ ਆਉਣਾ
+        // ithe link change kita hoya aa http://localhost:4000/getcart
         if (localStorage.getItem('auth-token')) {
-            fetch('http://localhost:4000/getcart', {
+            fetch('https://ecommerce-website-31e9.onrender.com', {
                 method: 'POST',
                 headers: {
                     Accept: 'application/form-data',
@@ -44,8 +46,9 @@ const ShopContextProvider = (props) => {
         setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] + 1 }));
         
         // ਜੇ ਲੌਗਇਨ ਹੈ ਤਾਂ ਬੈਕਐਂਡ (DB) ਵਿੱਚ ਵੀ ਅਪਡੇਟ ਕਰੋ
+        // ithe link change kita hoya aa http://localhost:4000/addtocart
         if (localStorage.getItem('auth-token')) {
-            fetch('http://localhost:4000/addtocart', {
+            fetch('https://ecommerce-website-31e9.onrender.com', {
                 method: 'POST',
                 headers: {
                     Accept: 'application/form-data',
@@ -64,8 +67,9 @@ const ShopContextProvider = (props) => {
         setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 }));
 
         // ਜੇ ਲੌਗਇਨ ਹੈ ਤਾਂ ਬੈਕਐਂਡ (DB) ਵਿੱਚ ਵੀ ਅਪਡੇਟ ਕਰੋ
+        // ithe link change kitaa hoya aa http://localhost:4000/removefromcart
         if (localStorage.getItem('auth-token')) {
-            fetch('http://localhost:4000/removefromcart', {
+            fetch('https://ecommerce-website-31e9.onrender.com', {
                 method: 'POST',
                 headers: {
                     Accept: 'application/form-data',
