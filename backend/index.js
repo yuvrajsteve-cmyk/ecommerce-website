@@ -282,6 +282,7 @@ const app = express();
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
+app.use(cors());
 const path = require('path');
 const multer = require('multer');
 const dotenv = require('dotenv');
