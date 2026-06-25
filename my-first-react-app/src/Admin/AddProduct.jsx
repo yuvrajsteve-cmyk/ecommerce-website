@@ -24,8 +24,8 @@ const AddProduct = () => {
         let formData = new FormData();
         formData.append('product', image);
 
-        
-        await fetch('http://localhost:4000/upload', {
+        // i change the link here http://localhost:4000/upload
+        await fetch('https://ecommerce-website-31e9.onrender.com', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -37,7 +37,8 @@ const AddProduct = () => {
             product.image = responseData.image_url;
             
             // 2. save the project
-            await fetch('http://localhost:4000/addproduct', {
+            // i change the link here http://localhost:4000/addproduct
+            await fetch('https://ecommerce-website-31e9.onrender.com', {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
