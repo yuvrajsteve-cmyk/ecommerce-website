@@ -21,7 +21,7 @@ router.post('/', async (req, res) => {
 
     const newUser = new NewsletterUser({ email })
     await newUser.save()
-    
+
     return res.json({ success: true, message: 'Subscribed successfully! ✅' })
   } catch (err) {
     const logger = console

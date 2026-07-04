@@ -4,7 +4,7 @@ import globals from 'globals'
 export default [
   js.configs.recommended,
   {
-    files: ['**/*.js'],
+    files: ['**/*.js', '**/*.cjs', '**/*.mjs'],
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
@@ -13,12 +13,13 @@ export default [
         ...globals.jest,
         require: 'readonly',
         module: 'readonly',
-        __dirname: 'readonly'
+        __dirname: 'readonly',
+        process: 'readonly'
       }
     },
     rules: {
       'indent': ['error', 2],
-      'linebreak-style': ['error', 'unix'],
+      'linebreak-style': 0,
       'quotes': ['error', 'single'],
       'semi': ['error', 'never'],
       'eqeqeq': 'error',

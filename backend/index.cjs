@@ -19,6 +19,7 @@ dotenv.config()
 
 const PORT = process.env.PORT || 4000
 const MONGO_URI = process.env.MONGO_URI
+const ADMIN_SECRET_KEY = process.env.ADMIN_SECRET_KEY || 'mera_gupt_password_2026'
 
 app.use(express.json())
 app.use('/subscribe', newsletterRouter)
@@ -45,10 +46,11 @@ const Users = mongoose.model('Users', {
 
 mongoose.connect(MONGO_URI)
   .then(() => {
-    console.log('✅ MongoDB Connected Successfully...')
     importData()
   })
-  .catch((err) => console.log('❌ DB Connection Error: ', err.message))
+  .catch((err) => {
+    return err
+  })
 
 const storage = multer.diskStorage({
   destination: './upload/images',
@@ -68,11 +70,20 @@ const fetchUser = async (req, res, next) => {
       const data = jwt.verify(token, 'secret_ecom')
       req.user = data.user
       next()
-    } catch (error) {
-      console.error(error.message)
+    } catch {
       res.status(401).send({ errors: 'Please authenticate using a valid token' })
     }
   }
+}
+
+
+const verifyAdmin = (req, res, next) => {
+  const adminToken = req.header('admin-token')
+
+  if (!adminToken || adminToken !== ADMIN_SECRET_KEY) {
+    return res.status(403).json({ success: false, errors: 'Access Denied' })
+  }
+  next()
 }
 
 app.get('/', (req, res) => {
@@ -117,7 +128,6 @@ app.post('/login', async (req, res) => {
 })
 
 app.post('/addtocart', fetchUser, async (req, res) => {
-  console.log('Added Item ID:', req.body.itemId)
   let userData = await Users.findOne({ _id: req.user.id })
   userData.cartData[req.body.itemId] += 1
   await Users.findOneAndUpdate({ _id: req.user.id }, { cartData: userData.cartData })
@@ -125,7 +135,6 @@ app.post('/addtocart', fetchUser, async (req, res) => {
 })
 
 app.post('/removefromcart', fetchUser, async (req, res) => {
-  console.log('Removed Item ID:', req.body.itemId)
   let userData = await Users.findOne({ _id: req.user.id })
   if (userData.cartData[req.body.itemId] > 0)
     userData.cartData[req.body.itemId] -= 1
@@ -134,19 +143,18 @@ app.post('/removefromcart', fetchUser, async (req, res) => {
 })
 
 app.post('/getcart', fetchUser, async (req, res) => {
-  console.log('Fetching User Cart Data...')
   let userData = await Users.findOne({ _id: req.user.id })
   res.json(userData.cartData)
 })
 
-app.post('/upload', upload.single('product'), (req, res) => {
+app.post('/upload', verifyAdmin, upload.single('product'), (req, res) => {
   res.json({
     success: 1,
-    image_url: `http://localhost:${PORT}/images/${req.file.filename}`
+    image_url: `https://${req.get('host')}/images/${req.file.filename}`
   })
 })
 
-app.post('/addproduct', async (req, res) => {
+app.post('/addproduct', verifyAdmin, async (req, res) => {
   let products = await Product.find({})
   let id = products.length > 0 ? products.slice(-1)[0].id + 1 : 1
   const product = new Product({
@@ -166,7 +174,7 @@ app.get('/allproducts', async (req, res) => {
   res.send(products)
 })
 
-app.post('/removeproduct', async (req, res) => {
+app.post('/removeproduct', verifyAdmin, async (req, res) => {
   await Product.findOneAndDelete({ id: req.body.id })
   res.json({ success: true, name: req.body.name })
 })
@@ -176,36 +184,28 @@ const importData = async () => {
     const count = await Product.countDocuments()
     if (count === 0) {
       const all_product_to_import = [
-        { id: 1, name: 'Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse', category: 'women', image: 'http://localhost:4000/images/product_1.png', new_price: 50.0, old_price: 80.5 },
-        { id: 2, name: 'Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse', category: 'women', image: 'http://localhost:4000/images/product_2.png', new_price: 85.0, old_price: 120.5 },
-        { id: 3, name: 'Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse', category: 'women', image: 'http://localhost:4000/images/product_3.png', new_price: 60.0, old_price: 100.5 },
-        { id: 4, name: 'Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse', category: 'women', image: 'http://localhost:4000/images/product_4.png', new_price: 100.0, old_price: 150.0 },
-        { id: 5, name: 'Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse', category: 'women', image: 'http://localhost:4000/images/product_5.png', new_price: 85.0, old_price: 120.5 },
-        { id: 6, name: 'Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse', category: 'women', image: 'http://localhost:4000/images/product_6.png', new_price: 85.0, old_price: 120.5 },
-        { id: 7, name: 'Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse', category: 'women', image: 'http://localhost:4000/images/product_7.png', new_price: 85.0, old_price: 120.5 },
-        { id: 8, name: 'Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse', category: 'women', image: 'http://localhost:4000/images/product_8.png', new_price: 85.0, old_price: 120.5 }
+        { id: 1, name: 'Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse', category: 'women', image: 'https://onrender.com', new_price: 50.0, old_price: 80.5 },
+        { id: 2, name: 'Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse', category: 'women', image: 'https://onrender.com', new_price: 85.0, old_price: 120.5 },
+        { id: 3, name: 'Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse', category: 'women', image: 'https://onrender.com', new_price: 60.0, old_price: 100.5 },
+        { id: 4, name: 'Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse', category: 'women', image: 'https://onrender.com', new_price: 100.0, old_price: 150.0 },
+        { id: 5, name: 'Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse', category: 'women', image: 'https://onrender.com', new_price: 85.0, old_price: 120.5 },
+        { id: 6, name: 'Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse', category: 'women', image: 'https://onrender.com', new_price: 85.0, old_price: 120.5 },
+        { id: 7, name: 'Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse', category: 'women', image: 'https://onrender.com', new_price: 85.0, old_price: 120.5 },
+        { id: 8, name: 'Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse', category: 'women', image: 'https://onrender.com', new_price: 85.0, old_price: 120.5 }
       ]
       await Product.insertMany(all_product_to_import)
-      console.log('✅ Default Products Imported Successfully...')
     }
   } catch (error) {
-    console.log('❌ Error importing data:', error.message)
+    return error
   }
 }
 
-app.listen(PORT, (error) => {
-  if (error) {
-    console.log('❌ Error : ' + error)
-    return
-  }
-
-  console.log('🚀 Server Running on Port ' + PORT)
-
+app.listen(PORT, () => {
   setInterval(() => {
-    https.get('https://backend-y690.onrender.com', (res) => {
-      console.log('🔄 Keep-Alive Ping Sent Successfully: ' + res.statusCode)
+    https.get('https://onrender.com', (res) => {
+      return res.statusCode
     }).on('error', (e) => {
-      console.log('❌ Keep-Alive Ping Failed: ' + e.message)
+      return e.message
     })
   }, 600000)
 })
