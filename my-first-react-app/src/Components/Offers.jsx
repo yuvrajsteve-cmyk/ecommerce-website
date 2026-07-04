@@ -1,39 +1,30 @@
-import exclusive_image from '../Assets/exclusive_image.png'; 
+import exclusive_image from '../Assets/exclusive_image.png'
 
 const Offers = () => {
   return (
-    /* Outer div nu center karan layi 'mx-auto' add kitta hai 
-       ate 'max-w-[1300px]' laya hai taan ki Newsletter de barabar rahe */
-    <div className="w-full max-w-[1500px] mx-auto bg-linear-to-b from-pink-300 to-white px-6 md:px-20 py-12 my-16">
-      
-      {/* Main Flex Box */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-10">
-        
-        {/* --- Left Side: Text ate Button --- */}
-        <div className="flex flex-col justify-center gap-4 md:w-1/2 text-center md:text-left items-center md:items-start">
-          <h1 className="text-4xl md:text-7xl font-bold leading-tight text-gray-900">
+    <div className='w-full bg-linear-to-b from-pink-300 to-white py-12 md:py-0 md:h-[60vh] flex items-center border-b border-gray-100/80'>
+      <div className='grid grid-cols-1 md:grid-cols-2 lg:px-60 md:px-12 px-6 gap-y-12 gap-x-12 my-10 w-full items-center'>
+
+        <div className='flex flex-col justify-center gap-4 w-full text-center md:text-left items-center md:items-start'>
+          <h1 className='text-4xl md:text-5xl lg:text-7xl font-black leading-tight text-gray-900 uppercase font-sans tracking-tight'>
             Exclusive <br /> Offers For You
           </h1>
-          <p className="text-sm md:text-lg font-medium text-gray-700 uppercase tracking-wider">
+          <p className='text-xs md:text-sm font-bold text-gray-700 uppercase tracking-widest mt-2'>
             ONLY ON BEST SELLERS PRODUCTS
           </p>
-          {/* <button className="bg-red-500 text-white py-3 px-10 rounded-full w-fit mt-4 hover:bg-red-600 transition duration-300 font-semibold shadow-md active:scale-95">
-            Check Now
-          </button> */}
         </div>
 
-        {/* --- Right Side: Image --- */}
-        <div className="md:w-1/2 flex justify-end items-center">
-          <img 
-            src={exclusive_image} 
-            alt="Exclusive Offer Model" 
-            className="w-full max-w-sm md:max-w-md lg:max-w-lg h-auto object-contain"
+        <div className='w-full flex justify-center md:justify-end items-center'>
+          <img
+            src={exclusive_image}
+            alt='Exclusive Offer Model'
+            className='w-full max-w-xs md:max-w-sm h-auto object-contain drop-shadow-xl'
           />
         </div>
 
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Offers;
+export default Offers

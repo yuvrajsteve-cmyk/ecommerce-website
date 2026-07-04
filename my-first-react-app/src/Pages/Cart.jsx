@@ -1,13 +1,13 @@
-import CartItems from "../Components/CartItems"
+import CartItems from '../Components/CartItems'
 
 
 const Cart = () => {
 
-return (
-  <div>
-     < CartItems />
-  </div>
-)
+  return (
+    <div>
+      < CartItems />
+    </div>
+  )
 
 }
 

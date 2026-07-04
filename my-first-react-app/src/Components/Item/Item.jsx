@@ -1,33 +1,35 @@
-import React from 'react';
-import { Link } from 'react-router-dom'; // 1. Link ਇੰਪੋਰਟ ਕਰੋ
+
+import { Link } from 'react-router-dom'
 
 const Item = (props) => {
   return (
-    <div className='item transform transition hover:scale-105 duration-300 shadow-md rounded-lg overflow-hidden bg-white'>
-      
-      {/* 2. ਫੋਟੋ ਨੂੰ Link ਦੇ ਅੰਦਰ ਰੱਖੋ ਤਾਂ ਜੋ ਕਲਿੱਕ ਕਰਨ ਤੇ ਪ੍ਰੋਡਕਟ ਪੇਜ ਖੁੱਲ੍ਹੇ */}
-      <Link to={`/product/${props.id}`}>
-        <img 
-          className="w-full h-auto cursor-pointer"
-          onClick={() => window.scrollTo(0,0)} 
-          src={props.image} 
-          alt={props.name} 
+    <div className='item transform transition hover:scale-105 duration-300 shadow-md rounded-lg overflow-hidden bg-white flex flex-col justify-between h-full w-full max-w-[280px]'>
+
+      <Link to={`/product/${props.id}`} onClick={() => window.scrollTo(0, 0)} className='block w-full bg-white shrink-0 overflow-hidden'>
+        <img
+          className='w-full h-auto cursor-pointer block object-contain bg-white'
+          src={props.image}
+          alt={props.name}
         />
       </Link>
 
-      <div className="p-4">
-        <p className="text-gray-700 font-medium mb-2">{props.name}</p>
-        <div className="item-prices flex gap-4 items-center">
-          <div className="item-price-new text-red-600 font-bold text-lg">
+      <div className='p-4 flex flex-col flex-grow justify-between bg-white'>
+        <p className='mt-2 flex font-semibold text-gray-700 font-sans line-clamp-2 text-sm sm:text-base leading-snug'>
+          {props.name}
+        </p>
+
+        <div className='flex gap-4 mt-2 select-none'>
+          <div className='font-bold text-red-600 text-lg font-sans'>
             ${props.new_price}
           </div>
-          <div className="item-price-old text-gray-400 line-through">
+          <div className='line-through text-gray-500 text-sm font-medium'>
             ${props.old_price}
           </div>
         </div>
       </div>
-    </div>
-  );
-};
 
-export default Item;
+    </div>
+  )
+}
+
+export default Item

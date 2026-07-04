@@ -1,139 +1,148 @@
-import { useState, useEffect } from "react";
+import { useState, useContext } from 'react'
 import my_logo from '../Assets/logo.png'
 import { ShopContext } from '../Context/ShopContext'
-import { Link, useLocation } from "react-router-dom";
-import { useContext } from "react";
+import { Link, useLocation } from 'react-router-dom'
 
 const Header = () => {
-    const [isOpeon, setIsOpen] = useState(false);
-    const [userDropdown, setUserDropdown] = useState(false); // User dropdown state
-    const location = useLocation();
-    const path = location.pathname;
-    const { getTotalCartItems } = useContext(ShopContext);
+  const [isOpeon, setIsOpen] = useState(false)
+  const [userDropdown, setUserDropdown] = useState(false)
+  const location = useLocation()
+  const path = location.pathname
+  const { getTotalCartItems } = useContext(ShopContext)
 
-    // Logout function
-    const handleLogout = () => {
-        localStorage.removeItem('auth-token');
-        localStorage.removeItem('user-name');
-        window.location.replace('/');
-    };
+  const handleLogout = () => {
+    localStorage.removeItem('auth-token')
+    localStorage.removeItem('user-name')
+    window.location.replace('/')
+  }
 
-    return (
-        <header className="bg-white shadow-md w-full sticky top-0 z-50">
-            <nav className="container mx-auto px-4 md:px-6 py-4 flex justify-between items-center">
+  return (
+    <header className='bg-white/80 backdrop-blur-md shadow-sm w-full sticky top-0 z-50 transition-all border-b border-gray-100'>
+      <nav className='container mx-auto px-4 md:px-6 py-3.5 flex justify-between items-center'>
 
-                {/* Logo Section */}
-                <div className="flex items-center space-x-2 shrink-0">
-                    <Link to='/' className="flex items-center space-x-2">
-                        <img src={my_logo} alt="Logo" className="w-10 md:w-12 cursor-pointer" />
-                        <span className="text-2xl md:text-4xl font-bold text-gray-900 tracking-wider uppercase">CARA</span>
-                    </Link>
-                </div>
+        <div className='flex items-center space-x-2 shrink-0'>
+          <Link to='/' className='flex items-center space-x-3 group'>
+            <img src={my_logo} alt='Logo' className='w-10 md:w-11 object-contain transition-transform group-hover:scale-105 duration-300' />
+            <span className='text-xl md:text-2xl font-black text-gray-900 tracking-widest bg-gradient-to-r from-gray-900 to-blue-900 bg-clip-text text-transparent uppercase'>CARA</span>
+          </Link>
+        </div>
 
-                {/* Desktop Navigation */}
-                <div className="hidden md:flex items-center space-x-8">
-                    <ul className="flex space-x-8 text-lg font-medium text-blue-800">
-                        <li><Link to="/" className={path === '/' ? "border-b-2 border-red-500 pb-1" : "hover:text-blue-600 transition"}>Shop</Link></li>
-                        <li><Link to="/men" className={path === "/men" ? "border-b-2 border-red-500 pb-1" : "hover:text-blue-800 transition"}>Men</Link></li>
-                        <li><Link to="/women" className={path === "/women" ? "border-b-2 border-red-500 pb-1" : "hover:text-blue-800 transition"}>Women</Link></li>
-                        <li><Link to="/kids" className={path === "/kids" ? "border-b-2 border-red-500 pb-1" : "hover:text-blue-800 transition"}>Kids</Link></li>
-                        <li>
-                            <Link to="/admin-add" className={path === "/admin-add" ? "border-b-2 border-red-500 pb-1 text-red-600" : "text-red-500 hover:text-red-700 font-semibold"}>
-                                Admin
-                            </Link>
-                        </li>
-                    </ul>
-                </div>
+        <div className='hidden md:flex items-center space-x-1'>
+          <ul className='flex items-center space-x-1 text-sm font-semibold text-gray-600'>
+            <li>
+              <Link to='/' className={`px-4 py-2 rounded-full transition-all duration-200 ${path === '/' ? 'bg-gray-900 text-white shadow-sm' : 'hover:bg-gray-100 hover:text-gray-900'}`}>Shop</Link>
+            </li>
+            <li>
+              <Link to='/men' className={`px-4 py-2 rounded-full transition-all duration-200 ${path === '/men' ? 'bg-gray-900 text-white shadow-sm' : 'hover:bg-gray-100 hover:text-gray-900'}`}>Men</Link>
+            </li>
+            <li>
+              <Link to='/women' className={`px-4 py-2 rounded-full transition-all duration-200 ${path === '/women' ? 'bg-gray-900 text-white shadow-sm' : 'hover:bg-gray-100 hover:text-gray-900'}`}>Women</Link>
+            </li>
+            <li>
+              <Link to='/kids' className={`px-4 py-2 rounded-full transition-all duration-200 ${path === '/kids' ? 'bg-gray-900 text-white shadow-sm' : 'hover:bg-gray-100 hover:text-gray-900'}`}>Kids</Link>
+            </li>
+            <li>
+              <Link to='/admin-add' className={`px-4 py-2 rounded-full font-bold transition-all duration-200 ${path === '/admin-add' ? 'bg-red-600 text-white shadow-sm' : 'text-red-500 hover:bg-red-50 hover:text-red-600'}`}>Admin</Link>
+            </li>
+          </ul>
+        </div>
 
-                <div className="flex items-center space-x-3 md:space-x-6">
-                    {/* Desktop Auth/User Profile Section */}
-                    <div className="hidden md:block">
-                        {localStorage.getItem('auth-token') ? (
-                            <div className="relative">
-                                <button 
-                                    onClick={() => setUserDropdown(!userDropdown)}
-                                    className="flex items-center space-x-2 px-4 py-2 bg-gray-100 rounded-full hover:bg-gray-200 transition duration-300 border border-gray-300"
-                                >
-                                    <div className="w-8 h-8 bg-blue-900 text-white rounded-full flex items-center justify-center font-bold">
-                                        {localStorage.getItem('user-name') ? localStorage.getItem('user-name')[0].toUpperCase() : 'U'}
-                                    </div>
-                                    <span className="font-semibold text-gray-800">Hi, {localStorage.getItem('user-name') || 'User'}</span>
-                                    <svg className={`w-4 h-4 transition-transform ${userDropdown ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
-                                </button>
+        <div className='flex items-center space-x-2 md:space-x-4'>
+          <div className='hidden md:block'>
+            {localStorage.getItem('auth-token') ? (
+              <div className='relative'>
+                <button
+                  onClick={() => setUserDropdown(!userDropdown)}
+                  className='flex items-center space-x-2.5 px-3.5 py-1.5 bg-gray-50 rounded-full hover:bg-gray-100 transition duration-200 border border-gray-200 cursor-pointer shadow-xs'
+                >
+                  <div className='w-7 h-7 bg-linear-to-tr from-gray-900 to-blue-900 text-white rounded-full flex items-center justify-center font-bold text-xs shadow-inner uppercase'>
+                    {localStorage.getItem('user-name') ? localStorage.getItem('user-name')[0] : 'U'}
+                  </div>
+                  <span className='font-medium text-sm text-gray-700 max-w-[120px] truncate'>Hi, {localStorage.getItem('user-name') || 'User'}</span>
+                  <svg className={`w-3.5 h-3.5 text-gray-500 transition-transform duration-200 ${userDropdown ? 'rotate-180' : ''}`} fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                    <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2.5' d='M19 9l-7 7-7-7'></path>
+                  </svg>
+                </button>
 
-                                {/* Stylish Dropdown */}
-                                {userDropdown && (
-                                    <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-xl z-50 overflow-hidden py-2 animate-in fade-in zoom-in duration-200">
-                                        <button 
-                                            onClick={handleLogout}
-                                            className="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 font-medium transition"
-                                        >
-                                            Logout
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
-                        ) : (
-                            <Link to="/login">
-                                <button className="px-6 py-2 text-md font-medium text-blue-900 border-2 border-blue-900 rounded-full hover:bg-blue-900 hover:text-white transition duration-300">
-                                    Login
-                                </button>
-                            </Link>
-                        )}
-                    </div>
-
-                    {/* Cart Icon */}
-                    <Link to="/cart" className="relative group p-1">
-                        <svg className="w-7 h-7 md:w-8 md:h-8 text-gray-800 group-hover:text-blue-900 transition" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
-                            <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                        </svg>
-                        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-sm">
-                            {getTotalCartItems()}
-                        </span>
-                    </Link>
-
-                    {/* Mobile Menu Button */}
-                    <button className="md:hidden p-2 text-gray-600 hover:bg-gray-100  rounded-md" onClick={() => setIsOpen(!isOpeon)}>
-                        {isOpeon ? (
-                            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
-                        ) : (
-                            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
-                        )}
+                {userDropdown && (
+                  <div className='absolute right-0 mt-2 w-44 bg-white border border-gray-100 rounded-xl shadow-xl z-50 overflow-hidden py-1 transition-all duration-200'>
+                    <button
+                      onClick={handleLogout}
+                      className='w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 font-semibold transition cursor-pointer'
+                    >
+                      Logout
                     </button>
-                </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Link to='/login'>
+                <button className='px-5 py-1.5 text-sm font-semibold text-gray-900 border border-gray-300 rounded-full hover:bg-gray-900 hover:text-white hover:border-gray-900 transition duration-200 cursor-pointer shadow-xs'>
+                  Login
+                </button>
+              </Link>
+            )}
+          </div>
 
-                {/* Mobile Menu Slide */}
-                <div className={`${isOpeon ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0 pointer-events-none'} transition-all duration-300 md:hidden absolute top-[72px] left-0 w-full bg-white flex flex-col items-center py-8 space-y-6 shadow-2xl border-t z-40`}>
-                    {/* User Info for Mobile */}
-                    {localStorage.getItem('auth-token') && (
-                         <div className="flex flex-col items-center pb-4 border-b w-full">
-                            <div className="w-12 h-12 bg-blue-900 text-white rounded-full flex items-center justify-center font-bold text-xl mb-2">
-                                {localStorage.getItem('user-name') ? localStorage.getItem('user-name')[0].toUpperCase() : 'U'}
-                            </div>
-                            <span className="font-bold text-gray-900 text-lg">Hi, {localStorage.getItem('user-name') || 'User'}</span>
-                         </div>
-                    )}
+          <Link to='/cart' className='relative p-2 rounded-full hover:bg-gray-100 transition text-gray-700 hover:text-gray-900'>
+            <svg className='w-6 h-6' fill='none' strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' viewBox='0 0 24 24' stroke='currentColor'>
+              <path d='M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z'></path>
+            </svg>
+            <span className='absolute top-0.5 right-0.5 bg-gray-900 text-white text-[10px] font-bold rounded-full h-4.5 w-4.5 flex items-center justify-center shadow-xs border border-white animate-pulse'>
+              {getTotalCartItems()}
+            </span>
+          </Link>
 
-                    <ul className="flex flex-col items-center space-y-5 text-xl font-medium text-blue-800">
-                        <li onClick={() => setIsOpen(false)}><Link to="/">Shop</Link></li>
-                        <li onClick={() => setIsOpen(false)}><Link to="/men">Men</Link></li>
-                        <li onClick={() => setIsOpen(false)}><Link to="/women">Women</Link></li>
-                        <li onClick={() => setIsOpen(false)}><Link to="/kids">Kids</Link></li>
-                        <li onClick={() => setIsOpen(false)}><Link to="/admin-add" className="text-red-500">Admin</Link></li>
-                    </ul>
+          <button className='md:hidden p-2 text-gray-600 hover:bg-gray-100 rounded-full transition' onClick={() => setIsOpen(!isOpeon)}>
+            {isOpeon ? (
+              <svg className='h-5 w-5' fill='none' viewBox='0 0 24 24' stroke='currentColor'><path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M6 18L18 6M6 6l12 12' /></svg>
+            ) : (
+              <svg className='h-5 w-5' fill='none' viewBox='0 0 24 24' stroke='currentColor'><path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M4 6h16M4 12h16M4 18h16' /></svg>
+            )}
+          </button>
+        </div>
 
-                    <div className="w-full flex justify-center px-6">
-                        {localStorage.getItem('auth-token') 
-                        ? <button onClick={handleLogout} className="w-full py-3 text-white bg-red-500 rounded-xl font-bold ">Logout</button>
-                        : <Link to="/login" onClick={() => setIsOpen(false)} className="w-full">
-                            <button className="w-full py-3 text-blue-900 border-2 border-blue-900 rounded-xl font-bold ">Login</button>
-                          </Link>
-                        }
-                    </div>
-                </div>
-            </nav>
-        </header>
-    );
+        <div className={`transition-all duration-300 md:hidden absolute top-[65px] left-0 w-full bg-white flex flex-col items-center py-6 space-y-5 shadow-xl border-t border-gray-100 z-40 ${isOpeon ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0 pointer-events-none'}`}>
+          {localStorage.getItem('auth-token') && (
+            <div className='flex flex-col items-center pb-3 border-b border-gray-100 w-4/5'>
+              <div className='w-10 h-10 bg-gray-900 text-white rounded-full flex items-center justify-center font-bold text-base mb-1.5 uppercase'>
+                {localStorage.getItem('user-name') ? localStorage.getItem('user-name')[0] : 'U'}
+              </div>
+              <span className='font-semibold text-gray-900 text-base'>Hi, {localStorage.getItem('user-name') || 'User'}</span>
+            </div>
+          )}
+
+          <ul className='flex flex-col items-center space-y-4 text-base font-semibold text-gray-600 w-full'>
+            <li className='w-full text-center' onClick={() => setIsOpen(false)}>
+              <Link to='/' className={`block py-1 ${path === '/' ? 'text-gray-900 font-bold' : ''}`}>Shop</Link>
+            </li>
+            <li className='w-full text-center' onClick={() => setIsOpen(false)}>
+              <Link to='/men' className={`block py-1 ${path === '/men' ? 'text-gray-900 font-bold' : ''}`}>Men</Link>
+            </li>
+            <li className='w-full text-center' onClick={() => setIsOpen(false)}>
+              <Link to='/women' className={`block py-1 ${path === '/women' ? 'text-gray-900 font-bold' : ''}`}>Women</Link>
+            </li>
+            <li className='w-full text-center' onClick={() => setIsOpen(false)}>
+              <Link to='/kids' className={`block py-1 ${path === '/kids' ? 'text-gray-900 font-bold' : ''}`}>Kids</Link>
+            </li>
+            <li className='w-full text-center' onClick={() => setIsOpen(false)}>
+              <Link to='/admin-add' className={`block py-1 text-red-500 font-bold ${path === '/admin-add' ? 'underline' : ''}`}>Admin</Link>
+            </li>
+          </ul>
+
+          <div className='w-full flex justify-center px-6 pt-2'>
+            {localStorage.getItem('auth-token') ? (
+              <button onClick={handleLogout} className='w-full py-2.5 text-white bg-red-600 hover:bg-red-700 rounded-full text-sm font-semibold transition shadow-sm cursor-pointer'>Logout</button>
+            ) : (
+              <Link to='/login' onClick={() => setIsOpen(false)} className='w-full'>
+                <button className='w-full py-2.5 text-gray-900 border border-gray-300 rounded-full text-sm font-semibold transition hover:bg-gray-50 shadow-sm cursor-pointer'>Login</button>
+              </Link>
+            )}
+          </div>
+        </div>
+      </nav>
+    </header>
+  )
 }
 
-export default Header;
+export default Header

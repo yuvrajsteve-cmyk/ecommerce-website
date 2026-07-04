@@ -1,43 +1,34 @@
-import React from "react";
 import new_collections from '../Assets/all_product'
 import Item from '../Components/Item/Item'
 
-
 const NewCollections = () => {
+  const displayData = [...new_collections]
+    .sort(() => 0.5 - Math.random())
+    .slice(0, 8)
 
-    const displayData = [...new_collections].sort(() => 0.5 - Math.random()) 
-    .slice(0, 8);
-
-   return (
-        
-    <div className='flex flex-col items-center gap-10 mb-24 px-4'>
-      <h1 className='text-6xl mt-9 font-bold text-gray-800md:text-5xl text-[#171717]'>NEW COLLECTIONS</h1>
-      <hr className='w-50 h-1 rounded-lg bg-[#171717] -mt-6' />
-      
-      {/* - grid-cols-2: Mobile te 2
-          - lg:grid-cols-4: Desktop te 4
-          - gap-x-10 gap-y-16: Horizontal te Vertical gap vadhaya hai
-      */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-10 gap-y-16 mt-10 w-full max-w-[1200px]">
-        {displayData.map((item, i) => {
-          return (
-            <Item 
-              key={i} 
-              id={item.id} 
-              name={item.name} 
-              image={item.image} 
-              new_price={item.new_price} 
-              old_price={item.old_price} 
-            />
-          )
-        })}
+  return (
+    <section className='w-full py-16 sm:py-24 animate-in fade-in duration-300 flex flex-col items-center'>
+      <div className='flex flex-col items-center mb-10 select-none'>
+        <h1 className='text-4xl md:text-6xl mt-9 font-bold text-gray-800 font-sans tracking-wide uppercase'>
+          POPULAR IN WOMEN
+        </h1>
+        <div className='w-50 h-1 mt-5 bg-gray-800 border-none rounded' />
       </div>
-    </div>
-        
-    
-   );
 
-
+      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-y-12 gap-x-12 px-6 md:px-12 lg:px-60 my-10 w-full justify-items-center'>
+        {displayData.map((item, i) => (
+          <Item
+            key={i}
+            id={item.id}
+            name={item.name}
+            image={item.image}
+            new_price={item.new_price}
+            old_price={item.old_price}
+          />
+        ))}
+      </div>
+    </section>
+  )
 }
 
 export default NewCollections

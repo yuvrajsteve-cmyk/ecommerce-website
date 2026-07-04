@@ -7,16 +7,16 @@ import Footer from '../Components/Footer/Footer'
 
 const ShopCategory = (props) => {
   // Context vichon data laina
-  const { all_product } = useContext(ShopContext);
+  const { all_product } = useContext(ShopContext)
 
-  console.log("Category from Props:", props.category);
-  console.log("All Products Data:", all_product);
+  console.log('Category from Props:', props.category)
+  console.log('All Products Data:', all_product)
 
   return (
     <div className='shop-category'>
       {/* 1. Category Banner */}
       <img className='shopcategory-banner' src={props.banner} alt="" />
-      
+
       {/* 2. Sorting and Index Section */}
       <div className="shopcategory-indexSort flex justify-between items-center my-5 px-10">
         <p>
@@ -34,7 +34,7 @@ const ShopCategory = (props) => {
           if (props.category === item.category) {
             return <Item key={i} id={item.id} name={item.name} image={item.image} new_price={item.new_price} old_price={item.old_price} />
           } else {
-            return null;
+            return null
           }
         })}
       </div>
