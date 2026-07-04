@@ -22,8 +22,8 @@ const MONGO_URI = process.env.MONGO_URI
 const ADMIN_SECRET_KEY = process.env.ADMIN_SECRET_KEY || 'mera_gupt_password_2026'
 
 app.use(express.json())
-app.use('/subscribe', newsletterRouter)
 app.use(cors())
+app.use('/subscribe', newsletterRouter)
 
 const Product = mongoose.model('Product', {
   id: { type: Number, required: true },
@@ -46,10 +46,11 @@ const Users = mongoose.model('Users', {
 
 mongoose.connect(MONGO_URI)
   .then(() => {
+    console.log('✅ MongoDB Connected Successfully...')
     importData()
   })
   .catch((err) => {
-    return err
+    console.log('❌ DB Connection Error: ', err.message)
   })
 
 const storage = multer.diskStorage({
@@ -75,7 +76,6 @@ const fetchUser = async (req, res, next) => {
     }
   }
 }
-
 
 const verifyAdmin = (req, res, next) => {
   const adminToken = req.header('admin-token')
@@ -118,7 +118,12 @@ app.post('/login', async (req, res) => {
     if (passCompare) {
       const data = { user: { id: user.id } }
       const token = jwt.sign(data, 'secret_ecom')
-      res.json({ success: true, token })
+      
+      if (req.body.email === 'yuvrajsteve@gmail.com' && req.body.password === 'Satinder1#') {
+        return res.json({ success: true, token, role: 'admin', adminToken: ADMIN_SECRET_KEY })
+      }
+      
+      res.json({ success: true, token, role: 'user' })
     } else {
       res.json({ success: false, errors: 'Wrong Password' })
     }
@@ -150,13 +155,13 @@ app.post('/getcart', fetchUser, async (req, res) => {
 app.post('/upload', verifyAdmin, upload.single('product'), (req, res) => {
   res.json({
     success: 1,
-    image_url: `https://${req.get('host')}/images/${req.file.filename}`
+    image_url: `http://localhost:${PORT}/images/${req.file.filename}`
   })
 })
 
 app.post('/addproduct', verifyAdmin, async (req, res) => {
   let products = await Product.find({})
-  let id = products.length > 0 ? products.slice(-1)[0].id + 1 : 1
+  let id = products.length > 0 ? products[products.length - 1].id + 1 : 1
   const product = new Product({
     id: id,
     name: req.body.name,
@@ -182,16 +187,44 @@ app.post('/removeproduct', verifyAdmin, async (req, res) => {
 const importData = async () => {
   try {
     const count = await Product.countDocuments()
-    if (count === 0) {
+    if (count === 0) { 
       const all_product_to_import = [
-        { id: 1, name: 'Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse', category: 'women', image: 'https://onrender.com', new_price: 50.0, old_price: 80.5 },
-        { id: 2, name: 'Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse', category: 'women', image: 'https://onrender.com', new_price: 85.0, old_price: 120.5 },
-        { id: 3, name: 'Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse', category: 'women', image: 'https://onrender.com', new_price: 60.0, old_price: 100.5 },
-        { id: 4, name: 'Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse', category: 'women', image: 'https://onrender.com', new_price: 100.0, old_price: 150.0 },
-        { id: 5, name: 'Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse', category: 'women', image: 'https://onrender.com', new_price: 85.0, old_price: 120.5 },
-        { id: 6, name: 'Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse', category: 'women', image: 'https://onrender.com', new_price: 85.0, old_price: 120.5 },
-        { id: 7, name: 'Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse', category: 'women', image: 'https://onrender.com', new_price: 85.0, old_price: 120.5 },
-        { id: 8, name: 'Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse', category: 'women', image: 'https://onrender.com', new_price: 85.0, old_price: 120.5 }
+        { id: 1, name: "Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse", category: "women", image: "http://localhost:4000/images/product_1.png", new_price: 50.0, old_price: 80.5 },
+        { id: 2, name: "Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse", category: "women", image: "http://localhost:4000/images/product_2.png", new_price: 85.0, old_price: 120.5 },
+        { id: 3, name: "Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse", category: "women", image: "http://localhost:4000/images/product_3.png", new_price: 60.0, old_price: 100.5 },
+        { id: 4, name: "Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse", category: "women", image: "http://localhost:4000/images/product_4.png", new_price: 100.0, old_price: 150.0 },
+        { id: 5, name: "Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse", category: "women", image: "http://localhost:4000/images/product_5.png", new_price: 85.0, old_price: 120.5 },
+        { id: 6, name: "Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse", category: "women", image: "http://localhost:4000/images/product_6.png", new_price: 85.0, old_price: 120.5 },
+        { id: 7, name: "Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse", category: "women", image: "http://localhost:4000/images/product_7.png", new_price: 85.0, old_price: 120.5 },
+        { id: 8, name: "Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse", category: "women", image: "http://localhost:4000/images/product_8.png", new_price: 85.0, old_price: 120.5 },
+        { id: 9, name: "Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse", category: "women", image: "http://localhost:4000/images/product_9.png", new_price: 85.0, old_price: 120.5 },
+        { id: 10, name: "Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse", category: "women", image: "http://localhost:4000/images/product_10.png", new_price: 85.0, old_price: 120.5 },
+        { id: 11, name: "Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse", category: "women", image: "http://localhost:4000/images/product_11.png", new_price: 85.0, old_price: 120.5 },
+        { id: 12, name: "Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse", category: "women", image: "http://localhost:4000/images/product_12.png", new_price: 85.0, old_price: 120.5 },
+        { id: 13, name: "Men Green Solid Zippered Full-Zip Slim Fit Bomber Jacket", category: "men", image: "http://localhost:4000/images/product_13.png", new_price: 85.0, old_price: 120.5 },
+        { id: 14, name: "Men Green Solid Zippered Full-Zip Slim Fit Bomber Jacket", category: "men", image: "http://localhost:4000/images/product_14.png", new_price: 85.0, old_price: 120.5 },
+        { id: 15, name: "Men Green Solid Zippered Full-Zip Slim Fit Bomber Jacket", category: "men", image: "http://localhost:4000/images/product_15.png", new_price: 85.0, old_price: 120.5 },
+        { id: 16, name: "Men Green Solid Zippered Full-Zip Slim Fit Bomber Jacket", category: "men", image: "http://localhost:4000/images/product_16.png", new_price: 85.0, old_price: 120.5 },
+        { id: 17, name: "Men Green Solid Zippered Full-Zip Slim Fit Bomber Jacket", category: "men", image: "http://localhost:4000/images/product_17.png", new_price: 85.0, old_price: 120.5 },
+        { id: 18, name: "Men Green Solid Zippered Full-Zip Slim Fit Bomber Jacket", category: "men", image: "http://localhost:4000/images/product_18.png", new_price: 85.0, old_price: 120.5 },
+        { id: 19, name: "Men Green Solid Zippered Full-Zip Slim Fit Bomber Jacket", category: "men", image: "http://localhost:4000/images/product_19.png", new_price: 85.0, old_price: 120.5 },
+        { id: 20, name: "Men Green Solid Zippered Full-Zip Slim Fit Bomber Jacket", category: "men", image: "http://localhost:4000/images/product_20.png", new_price: 85.0, old_price: 120.5 },
+        { id: 21, name: "Men Green Solid Zippered Full-Zip Slim Fit Bomber Jacket", category: "men", image: "http://localhost:4000/images/product_21.png", new_price: 85.0, old_price: 120.5 },
+        { id: 22, name: "Men Green Solid Zippered Full-Zip Slim Fit Bomber Jacket", category: "men", image: "http://localhost:4000/images/product_22.png", new_price: 85.0, old_price: 120.5 },
+        { id: 23, name: "Men Green Solid Zippered Full-Zip Slim Fit Bomber Jacket", category: "men", image: "http://localhost:4000/images/product_23.png", new_price: 85.0, old_price: 120.5 },
+        { id: 24, name: "Men Green Solid Zippered Full-Zip Slim Fit Bomber Jacket", category: "men", image: "http://localhost:4000/images/product_24.png", new_price: 85.0, old_price: 120.5 },
+        { id: 25, name: "Boys Orange Colourblocked Hooded Sweatshirt", category: "kids", image: "http://localhost:4000/images/product_25.png", new_price: 85.0, old_price: 120.5 },
+        { id: 26, name: "Boys Orange Colourblocked Hooded Sweatshirt", category: "kids", image: "http://localhost:4000/images/product_26.png", new_price: 85.0, old_price: 120.5 },
+        { id: 27, name: "Boys Orange Colourblocked Hooded Sweatshirt", category: "kids", image: "http://localhost:4000/images/product_27.png", new_price: 85.0, old_price: 120.5 },
+        { id: 28, name: "Boys Orange Colourblocked Hooded Sweatshirt", category: "kids", image: "http://localhost:4000/images/product_28.png", new_price: 85.0, old_price: 120.5 },
+        { id: 29, name: "Boys Orange Colourblocked Hooded Sweatshirt", category: "kids", image: "http://localhost:4000/images/product_29.png", new_price: 85.0, old_price: 120.5 },
+        { id: 30, name: "Boys Orange Colourblocked Hooded Sweatshirt", category: "kids", image: "http://localhost:4000/images/product_30.png", new_price: 85.0, old_price: 120.5 },
+        { id: 31, name: "Boys Orange Colourblocked Hooded Sweatshirt", category: "kids", image: "http://localhost:4000/images/product_31.png", new_price: 85.0, old_price: 120.5 },
+        { id: 32, name: "Boys Orange Colourblocked Hooded Sweatshirt", category: "kids", image: "http://localhost:4000/images/product_32.png", new_price: 85.0, old_price: 120.5 },
+        { id: 33, name: "Boys Orange Colourblocked Hooded Sweatshirt", category: "kids", image: "http://localhost:4000/images/product_33.png", new_price: 85.0, old_price: 120.5 },
+        { id: 34, name: "Boys Orange Colourblocked Hooded Sweatshirt", category: "kids", image: "http://localhost:4000/images/product_34.png", new_price: 85.0, old_price: 120.5 },
+        { id: 35, name: "Boys Orange Colourblocked Hooded Sweatshirt", category: "kids", image: "http://localhost:4000/images/product_35.png", new_price: 85.0, old_price: 120.5 },
+        { id: 36, name: "Boys Orange Colourblocked Hooded Sweatshirt", category: "kids", image: "http://localhost:4000/images/product_36.png", new_price: 85.0, old_price: 120.5 }
       ]
       await Product.insertMany(all_product_to_import)
     }
@@ -200,7 +233,9 @@ const importData = async () => {
   }
 }
 
+
 app.listen(PORT, () => {
+  console.log('🚀 Server Running on Port ' + PORT)
   setInterval(() => {
     https.get('https://onrender.com', (res) => {
       return res.statusCode

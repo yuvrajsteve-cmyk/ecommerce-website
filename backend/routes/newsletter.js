@@ -3,7 +3,6 @@ const router = express.Router()
 const NewsletterUser = require('../models/newsletter')
 
 router.post('/', async (req, res) => {
-  // 🚨 ਬਾਰੀਕੀ: ਬ੍ਰਾਊਜ਼ਰ ਦੀ CORS ਪਾਲਿਸੀ ਨੂੰ ਬਾਈਪਾਸ ਕਰਨ ਲਈ ਹੈਡਰਸ ਜ਼ਬਰਦਸਤੀ ਲਾਕ ਕਰ ਦਿੱਤੇ
   res.header('Access-Control-Allow-Origin', 'http://localhost:5173')
   res.header('Access-Control-Allow-Methods', 'POST, OPTIONS')
   res.header('Access-Control-Allow-Headers', 'Content-Type, Accept')
@@ -30,7 +29,6 @@ router.post('/', async (req, res) => {
   }
 })
 
-// 🚨 ਬਾਰੀਕੀ: Preflight (OPTIONS) ਰਿਕੁਐਸਟ ਨੂੰ ਹੈਂਡਲ ਕਰਨ ਲਈ
 router.options('/', (req, res) => {
   res.header('Access-Control-Allow-Origin', 'http://localhost:5173')
   res.header('Access-Control-Allow-Methods', 'POST, OPTIONS')

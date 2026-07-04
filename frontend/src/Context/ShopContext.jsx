@@ -2,7 +2,6 @@ import React, { createContext, useEffect, useState } from 'react'
 
 export const ShopContext = createContext(null)
 
-// ਕਾਰਟ ਨੂੰ ਖਾਲੀ ਸੈੱਟ ਕਰਨ ਲਈ ਫੰਕਸ਼ਨ
 const getDefaultCart = () => {
   let cart = {}
   for (let index = 0; index < 300 + 1; index++) {
@@ -12,22 +11,17 @@ const getDefaultCart = () => {
 }
 
 const ShopContextProvider = (props) => {
-
   const [all_product, setAll_Product] = useState([])
   const [cartItems, setCartItems] = useState(getDefaultCart())
 
   useEffect(() => {
-    // 1. ਬੈਕਐਂਡ ਤੋਂ ਸਾਰੇ ਪ੍ਰੋਡਕਟਸ ਲੈ ਕੇ ਆਉਣਾ
-    // ithe link change kita hoya aa http://localhost:4000/allproducts
-    fetch('https://ecommerce-website-31e9.onrender.com/allproducts')
+    fetch('http://localhost:4000/allproducts')
       .then((response) => response.json())
       .then((data) => setAll_Product(data))
       .catch((error) => console.log('Error fetching products:', error))
 
-    // 2. ਜੇ ਯੂਜ਼ਰ ਲੌਗਇਨ ਹੈ, ਤਾਂ ਉਹਦਾ ਸੇਵ ਕੀਤਾ ਹੋਇਆ ਕਾਰਟ ਡਾਟਾ ਲੈ ਕੇ ਆਉਣਾ
-    // ithe link change kita hoya aa http://localhost:4000/getcart
     if (localStorage.getItem('auth-token')) {
-      fetch('https://ecommerce-website-31e9.onrender.com/getcart', {
+      fetch('http://localhost:4000/getcart', {
         method: 'POST',
         headers: {
           Accept: 'application/form-data',
@@ -42,13 +36,10 @@ const ShopContextProvider = (props) => {
   }, [])
 
   const addToCart = (itemId) => {
-    // ਫਰੰਟਐਂਡ ਸਟੇਟ ਅਪਡੇਟ ਕਰੋ
     setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] + 1 }))
 
-    // ਜੇ ਲੌਗਇਨ ਹੈ ਤਾਂ ਬੈਕਐਂਡ (DB) ਵਿੱਚ ਵੀ ਅਪਡੇਟ ਕਰੋ
-    // ithe link change kita hoya aa http://localhost:4000/addtocart
     if (localStorage.getItem('auth-token')) {
-      fetch('https://ecommerce-website-31e9.onrender.com/addtocart', {
+      fetch('http://localhost:4000/addtocart', {
         method: 'POST',
         headers: {
           Accept: 'application/form-data',
@@ -63,13 +54,10 @@ const ShopContextProvider = (props) => {
   }
 
   const removeFromCart = (itemId) => {
-    // ਫਰੰਟਐਂਡ ਸਟੇਟ ਅਪਡੇਟ ਕਰੋ
     setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 }))
 
-    // ਜੇ ਲੌਗਇਨ ਹੈ ਤਾਂ ਬੈਕਐਂਡ (DB) ਵਿੱਚ ਵੀ ਅਪਡੇਟ ਕਰੋ
-    // ithe link change kitaa hoya aa http://localhost:4000/removefromcart
     if (localStorage.getItem('auth-token')) {
-      fetch('https://ecommerce-website-31e9.onrender.com/removefromcart', {
+      fetch('http://localhost:4000/removefromcart', {
         method: 'POST',
         headers: {
           Accept: 'application/form-data',

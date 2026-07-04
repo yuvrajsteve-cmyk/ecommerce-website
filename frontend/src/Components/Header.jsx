@@ -12,14 +12,14 @@ const Header = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('auth-token')
-    localStorage.removeItem('user-name')
-    window.location.replace('/')
+    localStorage.removeItem('admin-token')
+    localStorage.removeItem('user-email')
+    window.location.href = '/'
   }
 
   return (
     <header className='bg-white/80 backdrop-blur-md shadow-sm w-full sticky top-0 z-50 transition-all border-b border-gray-100'>
       <nav className='container mx-auto px-4 md:px-6 py-3.5 flex justify-between items-center'>
-
         <div className='flex items-center space-x-2 shrink-0'>
           <Link to='/' className='flex items-center space-x-3 group'>
             <img src={my_logo} alt='Logo' className='w-10 md:w-11 object-contain transition-transform group-hover:scale-105 duration-300' />
@@ -126,19 +126,22 @@ const Header = () => {
               <Link to='/kids' className={`block py-1 ${path === '/kids' ? 'text-gray-900 font-bold' : ''}`}>Kids</Link>
             </li>
             <li className='w-full text-center' onClick={() => setIsOpen(false)}>
-              <Link to='/admin-add' className={`block py-1 text-red-500 font-bold ${path === '/admin-add' ? 'underline' : ''}`}>Admin</Link>
+              <Link to='/admin-add' className={`block py-1 ${path === '/admin-add' ? 'text-red-600 font-bold' : ''}`}>Admin</Link>
+            </li>
+            <li className='w-full text-center pt-2'>
+              {localStorage.getItem('auth-token') ? (
+                <button onClick={handleLogout} className='w-4/5 py-2 text-sm text-white bg-red-600 rounded-full font-bold shadow-xs'>
+                  Logout
+                </button>
+              ) : (
+                <Link to='/login' className='w-4/5 block' onClick={() => setIsOpen(false)}>
+                  <button className='w-full py-2 text-sm font-semibold text-gray-900 border border-gray-300 rounded-full hover:bg-gray-900 hover:text-white transition duration-200'>
+                    Login
+                  </button>
+                </Link>
+              )}
             </li>
           </ul>
-
-          <div className='w-full flex justify-center px-6 pt-2'>
-            {localStorage.getItem('auth-token') ? (
-              <button onClick={handleLogout} className='w-full py-2.5 text-white bg-red-600 hover:bg-red-700 rounded-full text-sm font-semibold transition shadow-sm cursor-pointer'>Logout</button>
-            ) : (
-              <Link to='/login' onClick={() => setIsOpen(false)} className='w-full'>
-                <button className='w-full py-2.5 text-gray-900 border border-gray-300 rounded-full text-sm font-semibold transition hover:bg-gray-50 shadow-sm cursor-pointer'>Login</button>
-              </Link>
-            )}
-          </div>
         </div>
       </nav>
     </header>

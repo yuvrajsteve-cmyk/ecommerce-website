@@ -24,11 +24,13 @@ const AddProduct = () => {
     let formData = new FormData()
     formData.append('product', image)
 
-    // i change the link here http://localhost:4000/upload
-    await fetch('https://ecommerce-website-31e9.onrender.com/upload', {
+    const token = localStorage.getItem('admin-token')
+
+    await fetch('http://localhost:4000/upload', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
+        'admin-token': token,
       },
       body: formData,
     }).then((resp) => resp.json()).then((data) => { responseData = data })
@@ -36,13 +38,12 @@ const AddProduct = () => {
     if (responseData.success) {
       product.image = responseData.image_url
 
-      // 2. save the project
-      // i change the link here http://localhost:4000/addproduct
-      await fetch('https://ecommerce-website-31e9.onrender.com/addproduct', {
+      await fetch('http://localhost:4000/addproduct', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
+          'admin-token': token,
         },
         body: JSON.stringify(product),
       }).then((resp) => resp.json()).then((data) => {
@@ -57,54 +58,121 @@ const AddProduct = () => {
   }
 
   return (
-    <div className="p-8 bg-gray-100 min-h-screen flex justify-center items-start">
-      <div className="bg-white p-10 rounded-lg shadow-md w-full max-w-2xl">
-        <h1 className="text-2xl font-bold mb-6 text-gray-800 text-center">Add New Product</h1>
+    <div className="p-6 md:p-12 bg-linear-to-br from-slate-50 to-blue-50/50 min-h-[90vh] flex justify-center items-start antialiased">
+      <div className="bg-white/80 backdrop-blur-md p-8 md:p-10 rounded-2xl shadow-xl border border-slate-100 w-full max-w-2xl transform transition-all duration-300 hover:shadow-2xl">
+        
+        <div className="mb-8 text-center">
+          <h1 className="text-3xl font-black bg-gradient-to-r from-slate-900 to-blue-900 bg-clip-text text-transparent uppercase tracking-wider">
+            Add New Product
+          </h1>
+          <p className="text-slate-500 text-sm mt-1 font-medium">Create a new item in your store inventory</p>
+        </div>
 
-        <div className="space-y-4">
+        <div className="space-y-6">
           <div>
-            <p className="text-gray-600 font-medium mb-1">Product Title</p>
-            <input value={productDetails.name} onChange={changeHandler} type="text" name='name' placeholder='Type here' className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <label className="block text-slate-700 font-bold text-sm uppercase tracking-wider mb-2">
+              Product Title
+            </label>
+            <input 
+              value={productDetails.name} 
+              onChange={changeHandler} 
+              type="text" 
+              name="name" 
+              placeholder="e.g. Premium Oversized Cotton Hoodie" 
+              className="w-full px-4 py-3.5 bg-slate-50/50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 font-medium text-slate-800 placeholder-slate-400" 
+            />
           </div>
 
-          <div className="flex gap-4">
-            <div className="flex-1">
-              <p className="text-gray-600 font-medium mb-1">Old Price</p>
-              <input value={productDetails.old_price} onChange={changeHandler} type="text" name="old_price" placeholder='Price' className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div>
+              <label className="block text-slate-700 font-bold text-sm uppercase tracking-wider mb-2">
+                Original Price ($)
+              </label>
+              <div className="relative">
+                <span className="absolute left-4 top-3.5 text-slate-400 font-semibold">$</span>
+                <input 
+                  value={productDetails.old_price} 
+                  onChange={changeHandler} 
+                  type="number" 
+                  name="old_price" 
+                  placeholder="0.00" 
+                  className="w-full pl-9 pr-4 py-3.5 bg-slate-50/50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 font-semibold text-slate-800 placeholder-slate-300" 
+                />
+              </div>
             </div>
-            <div className="flex-1">
-              <p className="text-gray-600 font-medium mb-1">Offer Price</p>
-              <input value={productDetails.new_price} onChange={changeHandler} type="text" name="new_price" placeholder='New Price' className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+
+            <div>
+              <label className="block text-slate-700 font-bold text-sm uppercase tracking-wider mb-2">
+                Offer Price ($)
+              </label>
+              <div className="relative">
+                <span className="absolute left-4 top-3.5 text-slate-400 font-semibold">$</span>
+                <input 
+                  value={productDetails.new_price} 
+                  onChange={changeHandler} 
+                  type="number" 
+                  name="new_price" 
+                  placeholder="0.00" 
+                  className="w-full pl-9 pr-4 py-3.5 bg-slate-50/50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 font-semibold text-slate-800 placeholder-slate-300" 
+                />
+              </div>
             </div>
           </div>
 
           <div>
-            <p className="text-gray-600 font-medium mb-1">Product Category</p>
-            <select value={productDetails.category} onChange={changeHandler} name="category" className="w-full p-3 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
-              <option value="women">Women</option>
-              <option value="men">Men</option>
-              <option value="kid">Kid</option>
-            </select>
+            <label className="block text-slate-700 font-bold text-sm uppercase tracking-wider mb-2">
+              Product Category
+            </label>
+            <div className="relative">
+              <select 
+                value={productDetails.category} 
+                onChange={changeHandler} 
+                name="category" 
+                className="w-full px-4 py-3.5 bg-slate-50/50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 font-bold text-slate-700 appearance-none cursor-pointer"
+              >
+                <option value="women">Women Fashion</option>
+                <option value="men">Men Outfits</option>
+                <option value="kids">Kids Wear</option>
+              </select>
+              <div className="absolute right-4 top-4.5 pointer-events-none text-slate-500">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2.5' d='M19 9l-7 7-7-7'></path>
+                </svg>
+              </div>
+            </div>
           </div>
 
-          {/* Image Upload Section */}
-
-          <div className="mt-4">
-            <p className="text-gray-600 font-medium mb-1">Upload Product Image</p>
-            <label htmlFor="file-input">
-              <div className="h-32 w-32 flex items-center justify-center border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 bg-gray-50">
-                {image ?
-                  <img src={URL.createObjectURL(image)} alt="" className="h-full w-full object-contain" />
-                  :
-                  <span className="text-gray-400 text-sm">Click to upload</span>
-                }
+          <div>
+            <label className="block text-slate-700 font-bold text-sm uppercase tracking-wider mb-2">
+              Upload Product Image
+            </label>
+            <label htmlFor="file-input" className="block">
+              <div className="group min-h-[160px] w-full flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-xl cursor-pointer transition-all duration-300 hover:border-blue-500 hover:bg-blue-50/20 bg-slate-50/50 p-4">
+                {image ? (
+                  <div className="relative w-full max-h-[200px] flex justify-center">
+                    <img src={URL.createObjectURL(image)} alt="Preview" className="h-32 object-contain rounded-lg shadow-xs transition-transform duration-300 group-hover:scale-102" />
+                  </div>
+                ) : (
+                  <div className="text-center space-y-2">
+                    <div className="mx-auto w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 group-hover:bg-blue-100 transition-colors duration-200">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+                      </svg>
+                    </div>
+                    <p className="text-sm font-bold text-slate-600 group-hover:text-blue-600 transition-colors duration-200">Click to upload product image</p>
+                    <p className="text-xs text-slate-400 font-medium">Supports PNG, JPG, JPEG</p>
+                  </div>
+                )}
               </div>
             </label>
             <input onChange={imageHandler} type="file" name="image" id="file-input" hidden />
           </div>
 
-          <button onClick={Add_Product} className="mt-6 w-full bg-blue-600 text-white py-3 rounded-md font-bold hover:bg-blue-700 transition-colors uppercase tracking-wider">
-                        Add Product
+          <button 
+            onClick={Add_Product} 
+            className="mt-4 w-full bg-gradient-to-r from-gray-900 to-blue-900 text-white py-4 rounded-xl font-black text-sm uppercase tracking-widest hover:from-black hover:to-blue-950 transition-all duration-300 cursor-pointer shadow-md active:scale-[0.99] border-none"
+          >
+            Add Product To Catalog
           </button>
         </div>
       </div>

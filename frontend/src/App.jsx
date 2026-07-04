@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Navigate, Outlet, useLocation } from 'react-router-dom'
 import Header from './Components/Header'
 import Shop from './Pages/Shop'
 import Men from './Pages/Men'
@@ -13,10 +13,13 @@ import AddProduct from './Admin/AddProduct'
 import Checkout from './Components/Checkout'
 
 const AdminGuard = () => {
-  const isAdmin = localStorage.getItem('is_admin_user')
+  const location = useLocation()
+  const userEmail = localStorage.getItem('user-email')
+  const adminToken = localStorage.getItem('admin-token')
+  const secretKey = 'mera_gupt_password_2026'
 
-  if (isAdmin !== 'true') {
-    return <Navigate to='/login' replace />
+  if (userEmail !== 'yuvrajsteve@gmail.com' || adminToken !== secretKey) {
+    return <Navigate to='/login' state={{ from: location }} replace />
   }
 
   return <Outlet />
