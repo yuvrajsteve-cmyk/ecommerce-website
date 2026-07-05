@@ -178,25 +178,52 @@ app.post('/removeproduct', verifyAdmin, async (req, res) => {
 const importData = async () => {
   try {
     await Product.deleteMany({})
-    const base = "https://githubusercontent.com"
-    const list = []
-    
-    for (let i = 1; i <= 12; i++) {
-      list.push({ id: i, name: "Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse", category: "women", image: `${base}/product_${i}.png`, new_price: 50.0 + i, old_price: 80.5 + i })
-    }
-    for (let i = 13; i <= 24; i++) {
-      list.push({ id: i, name: "Men Green Solid Zippered Full-Zip Slim Fit Bomber Jacket", category: "men", image: `${base}/product_${i}.png`, new_price: 85.0, old_price: 120.5 })
-    }
-    for (let i = 25; i <= 36; i++) {
-      list.push({ id: i, name: "Boys Orange Colourblocked Hooded Sweatshirt", category: "kids", image: `${base}/product_${i}.png`, new_price: 85.0, old_price: 120.5 })
-    }
-    
+    const b = "https://githubusercontent.com"
+    const list = [
+      { id: 1, name: "Striped Flutter Sleeve Blouse", category: "women", image: `${b}/product_1.png`, new_price: 50, old_price: 80 },
+      { id: 2, name: "Striped Flutter Sleeve Blouse", category: "women", image: `${b}/product_2.png`, new_price: 85, old_price: 120 },
+      { id: 3, name: "Striped Flutter Sleeve Blouse", category: "women", image: `${b}/product_3.png`, new_price: 60, old_price: 100 },
+      { id: 4, name: "Striped Flutter Sleeve Blouse", category: "women", image: `${b}/product_4.png`, new_price: 100, old_price: 150 },
+      { id: 5, name: "Striped Flutter Sleeve Blouse", category: "women", image: `${b}/product_5.png`, new_price: 85, old_price: 120 },
+      { id: 6, name: "Striped Flutter Sleeve Blouse", category: "women", image: `${b}/product_6.png`, new_price: 85, old_price: 120 },
+      { id: 7, name: "Striped Flutter Sleeve Blouse", category: "women", image: `${b}/product_7.png`, new_price: 85, old_price: 120 },
+      { id: 8, name: "Striped Flutter Sleeve Blouse", category: "women", image: `${b}/product_8.png`, new_price: 85, old_price: 120 },
+      { id: 9, name: "Striped Flutter Sleeve Blouse", category: "women", image: `${b}/product_9.png`, new_price: 85, old_price: 120 },
+      { id: 10, name: "Striped Flutter Sleeve Blouse", category: "women", image: `${b}/product_10.png`, new_price: 85, old_price: 120 },
+      { id: 11, name: "Striped Flutter Sleeve Blouse", category: "women", image: `${b}/product_11.png`, new_price: 85, old_price: 120 },
+      { id: 12, name: "Striped Flutter Sleeve Blouse", category: "women", image: `${b}/product_12.png`, new_price: 85, old_price: 120 },
+      { id: 13, name: "Men Slim Fit Bomber Jacket", category: "men", image: `${b}/product_13.png`, new_price: 85, old_price: 120 },
+      { id: 14, name: "Men Slim Fit Bomber Jacket", category: "men", image: `${b}/product_14.png`, new_price: 85, old_price: 120 },
+      { id: 15, name: "Men Slim Fit Bomber Jacket", category: "men", image: `${b}/product_15.png`, new_price: 85, old_price: 120 },
+      { id: 16, name: "Men Slim Fit Bomber Jacket", category: "men", image: `${b}/product_16.png`, new_price: 85, old_price: 120 },
+      { id: 17, name: "Men Slim Fit Bomber Jacket", category: "men", image: `${b}/product_17.png`, new_price: 85, old_price: 120 },
+      { id: 18, name: "Men Slim Fit Bomber Jacket", category: "men", image: `${b}/product_18.png`, new_price: 85, old_price: 120 },
+      { id: 19, name: "Men Slim Fit Bomber Jacket", category: "men", image: `${b}/product_19.png', new_price: 85, old_price: 120 },
+      { id: 20, name: "Men Slim Fit Bomber Jacket", category: "men", image: `${b}/product_20.png`, new_price: 85, old_price: 120 },
+      { id: 21, name: "Men Slim Fit Bomber Jacket", category: "men", image: `${b}/product_21.png`, new_price: 85, old_price: 120 },
+      { id: 22, name: "Men Slim Fit Bomber Jacket", category: "men", image: `${b}/product_22.png`, new_price: 85, old_price: 120 },
+      { id: 23, name: "Men Slim Fit Bomber Jacket", category: "men", image: `${b}/product_23.png`, new_price: 85, old_price: 120 },
+      { id: 24, name: "Men Slim Fit Bomber Jacket", category: "men", image: `${b}/product_24.png`, new_price: 85, old_price: 120 },
+      { id: 25, name: "Boys Hooded Sweatshirt", category: "kids", image: `${b}/product_25.png`, new_price: 85, old_price: 120 },
+      { id: 26, name: "Boys Hooded Sweatshirt", category: "kids", image: `${b}/product_26.png`, new_price: 85, old_price: 120 },
+      { id: 27, name: "Boys Hooded Sweatshirt", category: "kids", image: `${b}/product_27.png`, new_price: 85, old_price: 120 },
+      { id: 28, name: "Boys Hooded Sweatshirt", category: "kids", image: `${b}/product_28.png`, new_price: 85, old_price: 120 },
+      { id: 29, name: "Boys Hooded Sweatshirt", category: "kids", image: `${b}/product_29.png`, new_price: 85, old_price: 120 },
+      { id: 30, name: "Boys Hooded Sweatshirt", category: "kids", image: `${b}/product_30.png`, new_price: 85, old_price: 120 },
+      { id: 31, name: "Boys Hooded Sweatshirt", category: "kids", image: `${b}/product_31.png`, new_price: 85, old_price: 120 },
+      { id: 32, name: "Boys Hooded Sweatshirt", category: "kids", image: `${b}/product_32.png`, new_price: 85, old_price: 120 },
+      { id: 33, name: "Boys Hooded Sweatshirt", category: "kids", image: `${b}/product_33.png`, new_price: 85, old_price: 120 },
+      { id: 34, name: "Boys Hooded Sweatshirt", category: "kids", image: `${b}/product_34.png`, new_price: 85, old_price: 120 },
+      { id: 35, name: "Boys Hooded Sweatshirt", category: "kids", image: `${b}/product_35.png`, new_price: 85, old_price: 120 },
+      { id: 36, name: "Boys Hooded Sweatshirt", category: "kids", image: `${b}/product_36.png`, new_price: 85, old_price: 120 }
+    ]
     await Product.insertMany(list)
     console.log("✅ 36 Products Uploaded Direct Successfully...")
   } catch (error) {
     return error
   }
 }
+
 
 app.listen(PORT, () => {
   console.log('🚀 Server Running on Port ' + PORT)
