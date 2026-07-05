@@ -22,7 +22,19 @@ const MONGO_URI = process.env.MONGO_URI
 const ADMIN_SECRET_KEY = process.env.ADMIN_SECRET_KEY || 'mera_gupt_password_2026'
 
 app.use(express.json())
-app.use(cors())
+
+app.use('/subscribe', newsletterRouter)
+
+const corsOptions = {
+  origin: '*',  // access the vercel and localhost
+  methods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'auth-token', 'Accept'],
+  credentials: true
+}
+
+app.use(cors(corsOptions))
+app.options('*', cors(corsOptions))
+
 app.use('/subscribe', newsletterRouter)
 
 const Product = mongoose.model('Product', {
