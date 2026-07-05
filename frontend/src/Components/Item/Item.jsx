@@ -1,14 +1,22 @@
-
 import { Link } from 'react-router-dom'
 
 const Item = (props) => {
+  const getCorrectImageUrl = (originalUrl) => {
+    if (!originalUrl) return ''
+    if (originalUrl.includes('/images/')) {
+      const imagePath = originalUrl.substring(originalUrl.indexOf('/images/'))
+      return `https://ecommerce-website-zgwf.onrender.com${imagePath}`
+    }
+    return originalUrl
+  }
+
   return (
     <div className='item transform transition hover:scale-105 duration-300 shadow-md rounded-lg overflow-hidden bg-white flex flex-col justify-between h-full w-full max-w-[280px]'>
 
       <Link to={`/product/${props.id}`} onClick={() => window.scrollTo(0, 0)} className='block w-full bg-white shrink-0 overflow-hidden'>
         <img
           className='w-full h-auto cursor-pointer block object-contain bg-white'
-          src={props.image}
+          src={getCorrectImageUrl(props.image)}
           alt={props.name}
         />
       </Link>

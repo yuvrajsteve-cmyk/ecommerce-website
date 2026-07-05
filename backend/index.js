@@ -196,7 +196,7 @@ const importData = async () => {
     await Product.deleteMany({})
     
     const baseUrl = process.env.NODE_ENV === 'production'
-      ? 'https://onrender.com' 
+      ? 'https://ecommerce-website-zgwf.onrender.com'  
       : `http://localhost:${PORT}`;
 
     const all_product_to_import = [
