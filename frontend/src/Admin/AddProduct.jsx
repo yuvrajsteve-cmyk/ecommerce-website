@@ -11,10 +11,10 @@ const AddProduct = () => {
 
   const API_URL = window.location.hostname === 'localhost' 
     ? 'http://localhost:4000' 
-    : 'https://onrender.com'
+    : 'https://ecommerce-website-zgwf.onrender.com'
 
   const imageHandler = (e) => {
-    setImage(e.target.files)
+    setImage(e.target.files[0])
   }
 
   const changeHandler = (e) => {
@@ -176,7 +176,7 @@ const AddProduct = () => {
             onClick={Add_Product} 
             className="mt-4 w-full bg-gradient-to-r from-gray-900 to-blue-900 text-white py-4 rounded-xl font-black text-sm uppercase tracking-widest hover:from-black hover:to-blue-950 transition-all duration-300 cursor-pointer shadow-md active:scale-[0.99] border-none"
           >
-            Add Product To Catalog
+            Add Product To Store
           </button>
         </div>
       </div>

@@ -28,7 +28,7 @@ const ShopContextProvider = (props) => {
       fetch(`${API_URL}/getcart`, {
         method: 'POST',
         headers: {
-          Accept: 'application/form-data',
+          Accept: 'application/json',
           'auth-token': `${localStorage.getItem('auth-token')}`,
           'Content-Type': 'application/json',
         },
@@ -36,6 +36,7 @@ const ShopContextProvider = (props) => {
       })
         .then((response) => response.json())
         .then((data) => setCartItems(data))
+        .catch((error) => console.log('Error getting cart:', error))
     }
   }, [API_URL])
 
@@ -46,14 +47,15 @@ const ShopContextProvider = (props) => {
       fetch(`${API_URL}/addtocart`, {
         method: 'POST',
         headers: {
-          Accept: 'application/form-data',
+          Accept: 'application/json',
           'auth-token': `${localStorage.getItem('auth-token')}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ 'itemId': itemId }),
       })
-        .then((response) => response.json())
+        .then((response) => response.text())
         .then((data) => console.log('Added to DB:', data))
+        .catch((error) => console.log('Error adding to cart:', error))
     }
   }
 
@@ -64,14 +66,15 @@ const ShopContextProvider = (props) => {
       fetch(`${API_URL}/removefromcart`, {
         method: 'POST',
         headers: {
-          Accept: 'application/form-data',
+          Accept: 'application/json',
           'auth-token': `${localStorage.getItem('auth-token')}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ 'itemId': itemId }),
       })
-        .then((response) => response.json())
+        .then((response) => response.text())
         .then((data) => console.log('Removed from DB:', data))
+        .catch((error) => console.log('Error removing from cart:', error))
     }
   }
 
