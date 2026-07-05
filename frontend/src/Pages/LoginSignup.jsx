@@ -10,7 +10,7 @@ const LoginSignup = () => {
 
   const API_URL = window.location.hostname === 'localhost' 
     ? 'http://localhost:4000' 
-    : 'https://onrender.com'
+    : 'https://ecommerce-website-zgwf.onrender.com'
 
   const changeHandler = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
