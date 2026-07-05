@@ -8,13 +8,17 @@ const LoginSignup = () => {
     email: ''
   })
 
+  const API_URL = window.location.hostname === 'localhost' 
+    ? 'http://localhost:4000' 
+    : 'https://onrender.com'
+
   const changeHandler = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
   const login = async () => {
     let responseData
-    await fetch('http://localhost:4000/login', {
+    await fetch(`${API_URL}/login`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -41,7 +45,7 @@ const LoginSignup = () => {
 
   const signup = async () => {
     let responseData
-    await fetch('http://localhost:4000/signup', {
+    await fetch(`${API_URL}/signup`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
