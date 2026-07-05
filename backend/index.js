@@ -10,11 +10,7 @@ const dns = require('dns')
 const https = require('https')
 const newsletterRouter = require('./routes/newsletter')
 
-dns.setServers([
-  '1.1.1.1',
-  '8.8.8.8'
-])
-
+dns.setServers(['1.1.1.1', '8.8.8.8'])
 dotenv.config()
 
 const PORT = process.env.PORT || 4000
@@ -53,7 +49,6 @@ mongoose.connect(MONGO_URI)
     console.log('❌ DB Connection Error: ', err.message)
   })
 
-
 const storage = multer.diskStorage({
   destination: './upload/images',
   filename: (req, file, cb) => {
@@ -80,7 +75,6 @@ const fetchUser = async (req, res, next) => {
 
 const verifyAdmin = (req, res, next) => {
   const adminToken = req.header('admin-token')
-
   if (!adminToken || adminToken !== ADMIN_SECRET_KEY) {
     return res.status(403).json({ success: false, errors: 'Access Denied' })
   }
@@ -97,9 +91,7 @@ app.post('/signup', async (req, res) => {
     return res.status(400).json({ success: false, errors: 'Existing user found with same email address' })
   }
   let cart = {}
-  for (let i = 0; i < 300; i++) {
-    cart[i] = 0
-  }
+  for (let i = 0; i < 300; i++) { cart[i] = 0 }
   const user = new Users({
     name: req.body.username,
     email: req.body.email,
@@ -119,11 +111,9 @@ app.post('/login', async (req, res) => {
     if (passCompare) {
       const data = { user: { id: user.id } }
       const token = jwt.sign(data, 'secret_ecom')
-      
       if (req.body.email === 'yuvrajsteve@gmail.com' && req.body.password === 'Satinder1#') {
         return res.json({ success: true, token, role: 'admin', adminToken: ADMIN_SECRET_KEY })
       }
-      
       res.json({ success: true, token, role: 'user' })
     } else {
       res.json({ success: false, errors: 'Wrong Password' })
@@ -156,7 +146,7 @@ app.post('/getcart', fetchUser, async (req, res) => {
 app.post('/upload', verifyAdmin, upload.single('product'), (req, res) => {
   res.json({
     success: 1,
-    image_url: `http://localhost:${PORT}/images/${req.file.filename}`
+    image_url: `https://${req.get('host')}/images/${req.file.filename}`
   })
 })
 
@@ -188,58 +178,25 @@ app.post('/removeproduct', verifyAdmin, async (req, res) => {
 const importData = async () => {
   try {
     await Product.deleteMany({})
-    const all_product_to_import = [
-      { id: 1, name: "Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse", category: "women", image: "https://githubusercontent.com", new_price: 50.0, old_price: 80.5 },
-      { id: 2, name: "Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse", category: "women", image: "https://githubusercontent.com", new_price: 85.0, old_price: 120.5 },
-      { id: 3, name: "Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse", category: "women", image: "https://githubusercontent.com", new_price: 60.0, old_price: 100.5 },
-      { id: 4, name: "Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse", category: "women", image: "https://githubusercontent.com", new_price: 100.0, old_price: 150.0 },
-      { id: 5, name: "Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse", category: "women", image: "https://githubusercontent.com", new_price: 85.0, old_price: 120.5 },
-      { id: 6, name: "Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse", category: "women", image: "https://githubusercontent.com", new_price: 85.0, old_price: 120.5 },
-      { id: 7, name: "Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse", category: "women", image: "https://githubusercontent.com", new_price: 85.0, old_price: 120.5 },
-      { id: 8, name: "Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse", category: "women", image: "https://githubusercontent.com", new_price: 85.0, old_price: 120.5 },
-      { id: 9, name: "Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse", category: "women", image: "https://githubusercontent.com", new_price: 85.0, old_price: 120.5 },
-      { id: 10, name: "Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse", category: "women", image: "https://githubusercontent.com", new_price: 85.0, old_price: 120.5 },
-      { id: 11, name: "Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse", category: "women", image: "https://githubusercontent.com", new_price: 85.0, old_price: 120.5 },
-      { id: 12, name: "Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse", category: "women", image: "https://githubusercontent.com", new_price: 85.0, old_price: 120.5 },
-      { id: 13, name: "Men Green Solid Zippered Full-Zip Slim Fit Bomber Jacket", category: "men", image: "https://githubusercontent.com", new_price: 85.0, old_price: 120.5 },
-      { id: 14, name: "Men Green Solid Zippered Full-Zip Slim Fit Bomber Jacket", category: "men", image: "https://githubusercontent.com", new_price: 85.0, old_price: 120.5 },
-      { id: 15, name: "Men Green Solid Zippered Full-Zip Slim Fit Bomber Jacket", category: "men", image: "https://githubusercontent.com", new_price: 85.0, old_price: 120.5 },
-      { id: 16, name: "Men Green Solid Zippered Full-Zip Slim Fit Bomber Jacket", category: "men", image: "https://githubusercontent.com", new_price: 85.0, old_price: 120.5 },
-      { id: 17, name: "Men Green Solid Zippered Full-Zip Slim Fit Bomber Jacket", category: "men", image: "https://githubusercontent.com", new_price: 85.0, old_price: 120.5 },
-      { id: 18, name: "Men Green Solid Zippered Full-Zip Slim Fit Bomber Jacket", category: "men", image: "https://githubusercontent.com", new_price: 85.0, old_price: 120.5 },
-      { id: 19, name: "Men Green Solid Zippered Full-Zip Slim Fit Bomber Jacket", category: "men", image: "https://githubusercontent.com", new_price: 85.0, old_price: 120.5 },
-      { id: 20, name: "Men Green Solid Zippered Full-Zip Slim Fit Bomber Jacket", category: "men", image: "https://githubusercontent.com", new_price: 85.0, old_price: 120.5 },
-      { id: 21, name: "Men Green Solid Zippered Full-Zip Slim Fit Bomber Jacket", category: "men", image: "https://githubusercontent.com", new_price: 85.0, old_price: 120.5 },
-      { id: 22, name: "Men Green Solid Zippered Full-Zip Slim Fit Bomber Jacket", category: "men", image: "https://githubusercontent.com", new_price: 85.0, old_price: 120.5 },
-      { id: 23, name: "Men Green Solid Zippered Full-Zip Slim Fit Bomber Jacket", category: "men", image: "https://githubusercontent.com", new_price: 85.0, old_price: 120.5 },
-      { id: 24, name: "Men Green Solid Zippered Full-Zip Slim Fit Bomber Jacket", category: "men", image: "https://githubusercontent.com", new_price: 85.0, old_price: 120.5 },
-      { id: 25, name: "Boys Orange Colourblocked Hooded Sweatshirt", category: "kids", image: "https://githubusercontent.com", new_price: 85.0, old_price: 120.5 },
-      { id: 26, name: "Boys Orange Colourblocked Hooded Sweatshirt", category: "kids", image: "https://githubusercontent.com", new_price: 85.0, old_price: 120.5 },
-      { id: 27, name: "Boys Orange Colourblocked Hooded Sweatshirt", category: "kids", image: "https://githubusercontent.com", new_price: 85.0, old_price: 120.5 },
-      { id: 28, name: "Boys Orange Colourblocked Hooded Sweatshirt", category: "kids", image: "https://githubusercontent.com", new_price: 85.0, old_price: 120.5 },
-      { id: 29, name: "Boys Orange Colourblocked Hooded Sweatshirt", category: "kids", image: "https://githubusercontent.com", new_price: 85.0, old_price: 120.5 },
-      { id: 30, name: "Boys Orange Colourblocked Hooded Sweatshirt", category: "kids", image: "https://githubusercontent.com", new_price: 85.0, old_price: 120.5 },
-      { id: 31, name: "Boys Orange Colourblocked Hooded Sweatshirt", category: "kids", image: "https://githubusercontent.com", new_price: 85.0, old_price: 120.5 },
-      { id: 32, name: "Boys Orange Colourblocked Hooded Sweatshirt", category: "kids", image: "https://githubusercontent.com", new_price: 85.0, old_price: 120.5 },
-      { id: 33, name: "Boys Orange Colourblocked Hooded Sweatshirt", category: "kids", image: "https://githubusercontent.com", new_price: 85.0, old_price: 120.5 },
-      { id: 34, name: "Boys Orange Colourblocked Hooded Sweatshirt", category: "kids", image: "https://githubusercontent.com", new_price: 85.0, old_price: 120.5 },
-      { id: 35, name: "Boys Orange Colourblocked Hooded Sweatshirt", category: "kids", image: "https://githubusercontent.com", new_price: 85.0, old_price: 120.5 },
-      { id: 36, name: "Boys Orange Colourblocked Hooded Sweatshirt", category: "kids", image: "https://githubusercontent.com", new_price: 85.0, old_price: 120.5 }
-    ]
-    await Product.insertMany(all_product_to_import)
+    const base = "https://githubusercontent.com"
+    const list = []
+    
+    for (let i = 1; i <= 12; i++) {
+      list.push({ id: i, name: "Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse", category: "women", image: `${base}/product_${i}.png`, new_price: 50.0 + i, old_price: 80.5 + i })
+    }
+    for (let i = 13; i <= 24; i++) {
+      list.push({ id: i, name: "Men Green Solid Zippered Full-Zip Slim Fit Bomber Jacket", category: "men", image: `${base}/product_${i}.png`, new_price: 85.0, old_price: 120.5 })
+    }
+    for (let i = 25; i <= 36; i++) {
+      list.push({ id: i, name: "Boys Orange Colourblocked Hooded Sweatshirt", category: "kids", image: `${base}/product_${i}.png`, new_price: 85.0, old_price: 120.5 })
+    }
+    
+    await Product.insertMany(list)
     console.log("✅ 36 Products Uploaded Direct Successfully...")
   } catch (error) {
     return error
   }
 }
-
-
-
-
-
-
-
-
 
 app.listen(PORT, () => {
   console.log('🚀 Server Running on Port ' + PORT)
