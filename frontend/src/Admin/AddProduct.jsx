@@ -9,8 +9,12 @@ const AddProduct = () => {
     old_price: ''
   })
 
+  const API_URL = window.location.hostname === 'localhost' 
+    ? 'http://localhost:4000' 
+    : 'https://onrender.com'
+
   const imageHandler = (e) => {
-    setImage(e.target.files[0])
+    setImage(e.target.files)
   }
 
   const changeHandler = (e) => {
@@ -26,7 +30,7 @@ const AddProduct = () => {
 
     const token = localStorage.getItem('admin-token')
 
-    await fetch('https://onrender.com', {
+    await fetch(`${API_URL}/upload`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -38,7 +42,7 @@ const AddProduct = () => {
     if (responseData.success) {
       product.image = responseData.image_url
 
-      await fetch('https://onrender.com', {
+      await fetch(`${API_URL}/addproduct`, {
         method: 'POST',
         headers: {
           Accept: 'application/json',

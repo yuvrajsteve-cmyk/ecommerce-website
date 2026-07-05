@@ -14,14 +14,18 @@ const ShopContextProvider = (props) => {
   const [all_product, setAll_Product] = useState([])
   const [cartItems, setCartItems] = useState(getDefaultCart())
 
+  const API_URL = window.location.hostname === 'localhost' 
+    ? 'http://localhost:4000' 
+    : 'https://ecommerce-website-zgwf.onrender.com'
+
   useEffect(() => {
-    fetch('https://onrender.com')
+    fetch(`${API_URL}/allproducts`)
       .then((response) => response.json())
       .then((data) => setAll_Product(data))
       .catch((error) => console.log('Error fetching products:', error))
 
     if (localStorage.getItem('auth-token')) {
-      fetch('https://onrender.com', {
+      fetch(`${API_URL}/getcart`, {
         method: 'POST',
         headers: {
           Accept: 'application/form-data',
@@ -33,13 +37,13 @@ const ShopContextProvider = (props) => {
         .then((response) => response.json())
         .then((data) => setCartItems(data))
     }
-  }, [])
+  }, [API_URL])
 
   const addToCart = (itemId) => {
     setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] + 1 }))
 
     if (localStorage.getItem('auth-token')) {
-      fetch('https://onrender.com', {
+      fetch(`${API_URL}/addtocart`, {
         method: 'POST',
         headers: {
           Accept: 'application/form-data',
@@ -57,7 +61,7 @@ const ShopContextProvider = (props) => {
     setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 }))
 
     if (localStorage.getItem('auth-token')) {
-      fetch('https://onrender.com', {
+      fetch(`${API_URL}/removefromcart`, {
         method: 'POST',
         headers: {
           Accept: 'application/form-data',
