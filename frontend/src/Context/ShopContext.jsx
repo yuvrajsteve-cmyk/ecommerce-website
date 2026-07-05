@@ -16,7 +16,7 @@ const ShopContextProvider = (props) => {
 
   const API_URL = window.location.hostname === 'localhost' 
     ? 'http://localhost:4000' 
-    : 'https://ecommerce-website-zgwf.onrender.com'
+    : 'https://onrender.com'
 
   useEffect(() => {
     fetch(`${API_URL}/allproducts`)
