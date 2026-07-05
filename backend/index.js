@@ -23,11 +23,9 @@ const ADMIN_SECRET_KEY = process.env.ADMIN_SECRET_KEY || 'mera_gupt_password_202
 
 app.use(express.json())
 
-app.use('/subscribe', newsletterRouter)
-
 const corsOptions = {
-  origin: '*',  // access the vercel and localhost
-  methods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
+  origin: '*',  
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'auth-token', 'Accept'],
   credentials: true
 }
@@ -64,7 +62,6 @@ mongoose.connect(MONGO_URI)
   .catch((err) => {
     console.log('❌ DB Connection Error: ', err.message)
   })
-
 
 const storage = multer.diskStorage({
   destination: './upload/images',
@@ -168,7 +165,7 @@ app.post('/getcart', fetchUser, async (req, res) => {
 app.post('/upload', verifyAdmin, upload.single('product'), (req, res) => {
   res.json({
     success: 1,
-    image_url: `http://localhost:${PORT}/images/${req.file.filename}`
+    image_url: `https://onrender.com{req.file.filename}`
   })
 })
 
@@ -196,6 +193,7 @@ app.post('/removeproduct', verifyAdmin, async (req, res) => {
   await Product.findOneAndDelete({ id: req.body.id })
   res.json({ success: true, name: req.body.name })
 })
+
 
 const importData = async () => {
   try {
